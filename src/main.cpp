@@ -9,6 +9,7 @@ using Eigen::MatrixXd;
 using Eigen::VectorXd;
 using std::string;
 using std::vector;
+using namespace std;
 
 // for convenience
 using json = nlohmann::json;
@@ -39,13 +40,16 @@ int main() {
   Tools tools;
   vector<VectorXd> estimations;
   vector<VectorXd> ground_truth;
-
-  h.onMessage([&fusionEKF,&tools,&estimations,&ground_truth]
+  int error=0;
+  int i=0;
+  
+  h.onMessage([&fusionEKF,&tools,&estimations,&ground_truth, &error, &i]
               (uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, 
                uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
     // The 2 signifies a websocket event
+    
     if (length && length > 2 && data[0] == '4' && data[1] == '2') {
       auto s = hasData(string(data));
 
@@ -124,11 +128,23 @@ int main() {
           estimate(1) = p_y;
           estimate(2) = v1;
           estimate(3) = v2;
-        
+          
           estimations.push_back(estimate);
+          //cout<<"estimate="<<estimate<<endl;
+          
+          cout<<"gt="<<gt_values<<endl;
 
           VectorXd RMSE = tools.CalculateRMSE(estimations, ground_truth);
+          //std::cout<<"RMSE="<<RMSE<<endl;
+          /*
+          if(i>0){
+            while(true){i++;}
+          }*/
+          i+=1;
 
+          error+=(x_gt-p_x)*(x_gt-p_x);
+          //cout<<"Error="<<error<<endl;
+          
           json msgJson;
           msgJson["estimate_x"] = p_x;
           msgJson["estimate_y"] = p_y;
