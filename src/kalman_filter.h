@@ -46,6 +46,12 @@ class KalmanFilter {
    */
   void UpdateEKF(const Eigen::VectorXd &z);
 
+  virtual Eigen::VectorXd saturateInnovationsLaser(Eigen::VectorXd innovation);
+
+  virtual Eigen::VectorXd saturateInnovationsRadar(Eigen::VectorXd innovation);
+
+  virtual bool isValid(Eigen::VectorXd& innovation);
+
   // state vector
   Eigen::VectorXd x_;
 
@@ -64,6 +70,62 @@ class KalmanFilter {
   // measurement covariance matrix
   Eigen::MatrixXd R_;
   
+};
+
+
+
+class KalmanFilterIS : public KalmanFilter
+{
+  public:
+    //Constructor
+    KalmanFilterIS();
+
+//    void Predict();
+
+    /**
+     * Updates the state by using standard Kalman Filter equations
+     * @param z The measurement at k+1
+     */
+  //  void Update(const Eigen::VectorXd &z);
+
+    /**
+     * Updates the state by using Extended Kalman Filter equations
+     * @param z The measurement at k+1
+     */
+    //void UpdateEKF(const Eigen::VectorXd &z);
+
+    Eigen::VectorXd saturateInnovationsLaser(Eigen::VectorXd innovation);
+
+    Eigen::VectorXd saturateInnovationsRadar(Eigen::VectorXd innovation);
+
+    bool isValid(Eigen::VectorXd& innovation);
+
+    /*
+    // state vector
+    Eigen::VectorXd x_;
+
+    // state covariance matrix
+    Eigen::MatrixXd P_;
+
+    // state transition matrix
+    Eigen::MatrixXd F_;
+
+    // process covariance matrix
+    Eigen::MatrixXd Q_;
+
+    // measurement matrix
+    Eigen::MatrixXd H_;
+
+    // measurement covariance matrix
+    Eigen::MatrixXd R_;
+    */
+
+    Eigen::VectorXd Lasersigma=Eigen::VectorXd(2);
+    Eigen::VectorXd Radarsigma=Eigen::VectorXd(3);
+
+    double gamma;
+    double mu;
+
 };
 
 #endif // KALMAN_FILTER_H_

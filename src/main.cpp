@@ -11,6 +11,7 @@ using std::string;
 using std::vector;
 using namespace std;
 
+
 // for convenience
 using json = nlohmann::json;
 
@@ -33,8 +34,10 @@ string hasData(string s) {
 int main() {
   uWS::Hub h;
 
-  // Create a Kalman Filter instance
-  FusionEKF fusionEKF;
+	// Create a Kalman Filter instance
+FusionEKF<KalmanFilterIS> fusionEKF;
+
+//  FusionEKFIS fusionEKFIS;
 
   // used to compute the RMSE later
   Tools tools;
@@ -42,14 +45,17 @@ int main() {
   vector<VectorXd> ground_truth;
   int error=0;
   int i=0;
-  
-  h.onMessage([&fusionEKF,&tools,&estimations,&ground_truth, &error, &i]
+
+
+  h.onMessage([&fusionEKF, &tools,&estimations,&ground_truth, &error, &i]
               (uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, 
                uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
     // The 2 signifies a websocket event
     
+    bool useInnovationSaturation=false;
+
     if (length && length > 2 && data[0] == '4' && data[1] == '2') {
       auto s = hasData(string(data));
 
@@ -112,10 +118,11 @@ int main() {
           ground_truth.push_back(gt_values);
           
           // Call ProcessMeasurement(meas_package) for Kalman filter
-          fusionEKF.ProcessMeasurement(meas_package);       
 
-          // Push the current estimated x,y positon from the Kalman filter's 
-          //   state vector
+          
+         fusionEKF.ProcessMeasurement(meas_package);         
+         // Push the current estimated x,y positon from the Kalman filter's 
+         //   state vector
 
           VectorXd estimate(4);
 
@@ -132,7 +139,7 @@ int main() {
           estimations.push_back(estimate);
           //cout<<"estimate="<<estimate<<endl;
           
-          cout<<"gt="<<gt_values<<endl;
+          //cout<<"gt="<<gt_values<<endl;
 
           VectorXd RMSE = tools.CalculateRMSE(estimations, ground_truth);
           //std::cout<<"RMSE="<<RMSE<<endl;
