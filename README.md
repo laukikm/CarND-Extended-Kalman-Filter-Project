@@ -1,6 +1,6 @@
 Detailed description:https://medium.com/@laukikm11/ekf-for-autonomous-vehicles-with-outlier-handling-d169dbae1949
 
-To run using the Naive Outlier Filtering, pass the KalmanFilter template while declaring the FusionEKF object.This can be done as 'FusionEKF<KalmanFilterIS> fusionEKF;'. For the innovation saturation approach,use KalmanFilterIS. To add other implementations, define a new class derived from the original KalmanFilter class, and rewrite just the virtual  functions.
+To run using the Naive Outlier Filtering, pass the KalmanFilter template while declaring the FusionEKF object.Check out line 38 in main.cpp. For the innovation saturation approach,use KalmanFilterIS. To add other implementations, define a new class derived from the original KalmanFilter class, and rewrite just the virtual  functions.
 
 
 # Extended Kalman Filter Project Starter Code
