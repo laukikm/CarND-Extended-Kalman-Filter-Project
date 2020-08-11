@@ -2,6 +2,7 @@ Detailed description:https://medium.com/@laukikm11/ekf-for-autonomous-vehicles-w
 
 To run using the Naive Outlier Filtering, pass the KalmanFilter template while declaring the FusionEKF object.Check out line 38 in main.cpp. For the innovation saturation approach,use KalmanFilterIS. To add other implementations, define a new class derived from the original KalmanFilter class, and rewrite just the virtual  functions.
 
+<img src="gifs/ekf.gif" width="700" height="500" />
 
 # Extended Kalman Filter Project Starter Code
 Self-Driving Car Engineer Nanodegree Program
